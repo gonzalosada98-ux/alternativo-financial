@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alternativo Agency · Financial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #faf8f3;
+    --bg-card: #ffffff;
+    --bg-soft: #f0ebe0;
+    --ink: #1a1a1a;
+    --ink-soft: #555048;
+    --ink-muted: #8a847a;
+    --line: #e8e2d3;
+    --orange: #e65414;
+    --orange-soft: #fef0e8;
+    --blue: #1e3a8a;
+    --green: #16a34a;
+    --green-soft: #ecfdf5;
+    --red: #dc2626;
+    --red-soft: #fef2f2;
+    --yellow: #ca8a04;
+    --yellow-soft: #fefce8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .display { font-family: 'Fraunces', serif; font-weight: 500; letter-spacing: -0.02em; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum"; }
+  .num { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum"; font-weight: 500; }
+
+  /* Header */
+  header {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .logo {
+    width: 44px; height: 44px;
+    background: var(--orange);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .logo svg { width: 28px; height: 28px; }
+  .brand-text h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .brand-text .subtitle {
+    font-size: 11px;
+    color: rgba(250, 248, 243, 0.6);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  select, button {
+    background: rgba(255,255,255,0.08);
+    color: var(--bg);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  select:hover, button:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.3);
+  }
+  button.primary {
+    background: var(--orange);
+    border-color: var(--orange);
+    font-weight: 500;
+  }
+  button.primary:hover {
+    background: #d44a10;
+    border-color: #d44a10;
+  }
+
+  /* Main */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+    overflow-x: auto;
+  }
+  .tab {
+    background: none;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    color: var(--ink-muted);
+    cursor: pointer;
+    position: relative;
+    font-weight: 500;
+    border-radius: 0;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+  .tab:hover {
+    color: var(--ink);
+    background: none;
+    border-color: transparent;
+  }
+  .tab.active {
+    color: var(--ink);
+  }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--orange);
+  }
+
+  /* Loading */
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 32px;
+    color: var(--ink-muted);
+  }
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--line);
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Error */
+  .error {
+    background: var(--red-soft);
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .error h3 { color: var(--red); font-size: 14px; margin-bottom: 8px; }
+  .error p { color: var(--ink-soft); font-size: 13px; }
+  .error pre {
+    background: white;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 12px;
+    font-size: 11px;
+    overflow-x: auto;
+  }
+
+  /* KPIs */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    main { padding: 20px; }
+  }
+  @media (max-width: 500px) {
+    .kpi-grid { grid-template-columns: 1fr; }
+  }
+
+  .kpi {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .kpi:hover { border-color: var(--ink-muted); }
+  .kpi.featured {
+    background: linear-gradient(135deg, #fff8f3 0%, var(--bg-card) 60%);
+    border-color: rgba(230, 84, 20, 0.3);
+  }
+  .kpi-label {
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .kpi-value {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .kpi-value.positive { color: var(--green); }
+  .kpi-value.negative { color: var(--red); }
+  .kpi-value .currency { font-size: 18px; opacity: 0.5; margin-right: 4px; }
+  .kpi-meta {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ink-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kpi-delta {
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+  }
+  .kpi-delta.positive { background: var(--green-soft); color: var(--green); }
+  .kpi-delta.negative { background: var(--red-soft); color: var(--red); }
+  .kpi-delta.neutral { background: var(--bg-soft); color: var(--ink-muted); }
+
+  /* Sections */
+  .section {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+  .section-subtitle {
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+
+  /* Charts */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 900px) {
+    .chart-grid { grid-template-columns: 1fr; }
+  }
+  .chart-container {
+    position: relative;
+    height: 320px;
+  }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--line);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: var(--ink); }
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  tr:hover td { background: rgba(0,0,0,0.015); }
+
+  td.strong { font-weight: 600; color: var(--ink); }
+  tr.total-row td {
+    background: var(--bg-soft);
+    font-weight: 700;
+    color: var(--ink);
+    border-top: 2px solid var(--line);
+  }
+  tr.subheader td {
+    background: rgba(0,0,0,0.02);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    font-weight: 600;
+    padding: 8px 14px;
+  }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .muted { color: var(--ink-muted); }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge.green { background: var(--green-soft); color: var(--green); }
+  .badge.red { background: var(--red-soft); color: var(--red); }
+  .badge.yellow { background: var(--yellow-soft); color: var(--yellow); }
+  .badge.gray { background: var(--bg-soft); color: var(--ink-muted); }
+
+  /* Alert */
+  .alert {
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border-left: 3px solid;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .alert.info { background: #eff6ff; border-color: var(--blue); }
+  .alert.warn { background: var(--yellow-soft); border-color: var(--yellow); }
+  .alert.danger { background: var(--red-soft); border-color: var(--red); }
+  .alert.success { background: var(--green-soft); border-color: var(--green); }
+  .alert-icon { font-weight: 700; font-size: 16px; }
+  .alert-title { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .alert-text { font-size: 12px; color: var(--ink-soft); }
+
+  /* Stat strip */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) {
+    .stat-strip { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  }
+  .stat-strip-item .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .stat-strip-item .value {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  /* Drilldown */
+  .drilldown-row {
+    background: rgba(230, 84, 20, 0.04) !important;
+    font-size: 12px;
+  }
+  .drilldown-row td:first-child { padding-left: 32px; }
+  .drilldown-row td { color: var(--ink-soft); border-bottom: 1px solid #f0e8d8; }
+
+  .clickable { cursor: pointer; }
+  .clickable td:first-child::before {
+    content: '▸';
+    display: inline-block;
+    margin-right: 8px;
+    color: var(--ink-muted);
+    font-size: 9px;
+    transform: translateY(-1px);
+    transition: transform 0.15s;
+  }
+  .clickable.expanded td:first-child::before {
+    transform: rotate(90deg) translateX(-1px);
+  }
+
+  /* Footer */
+  footer {
+    max-width: 1400px;
+    margin: 32px auto 0;
+    padding: 24px 32px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-muted);
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer a { color: var(--orange); text-decoration: none; }
+
+  .hidden { display: none !important; }
+
+  /* Tooltip-like hint */
+  .hint {
+    color: var(--ink-muted);
+    font-size: 11px;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo">
+        <!-- Logo similar a la "A" del cliente: cuadrado naranja, "A" itálica blue, círculo -->
+        <svg viewBox="0 0 28 28" fill="none">
+          <circle cx="9" cy="20" r="2.5" fill="#1e3a8a"/>
+          <path d="M 22 4 L 14 24" stroke="#1e3a8a" stroke-width="3.5" stroke-linecap="square"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>Alternativo Agency</h1>
+        <div class="subtitle">Financial · Tiempo Real</div>
+      </div>
+    </div>
+    <div class="controls">
+      <select id="period-selector">
+        <option value="current">Mes Actual</option>
+        <option value="last">Mes Anterior</option>
+        <option value="enero">Enero</option>
+        <option value="febrero">Febrero</option>
+        <option value="marzo">Marzo</option>
+        <option value="abril">Abril</option>
+        <option value="q1">Q1 (Ene-Mar)</option>
+        <option value="ytd">YTD (Año Actual)</option>
+      </select>
+      <button id="refresh-btn" class="primary">Actualizar</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab active" data-tab="snapshot">Snapshot</button>
+    <button class="tab" data-tab="pl">Estado de Resultados</button>
+    <button class="tab" data-tab="proyectos">Proyectos</button>
+  </div>
+
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <div>Cargando datos desde Google Sheets...</div>
+  </div>
+
+  <div id="error-box" class="error hidden">
+    <h3>No se pudieron cargar los datos</h3>
+    <p id="error-message"></p>
+    <pre id="error-detail"></pre>
+  </div>
+
+  <!-- TAB: SNAPSHOT -->
+  <div id="tab-snapshot" class="tab-content hidden">
+    <div class="kpi-grid">
+      <div class="kpi featured">
+        <div class="kpi-label">Saldo de Caja</div>
+        <div class="kpi-value" id="kpi-saldo"><span class="currency">$</span>—</div>
+        <div class="kpi-meta" id="kpi-saldo-meta">Acumulado al período</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Ingresos del Período</div>
+        <div class="kpi-value" id="kpi-ingresos"><span class="currency">$</span>—</div>
+        <div class="kpi-meta" id="kpi-ingresos-meta">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Resultado del Período</div>
+        <div class="kpi-value" id="kpi-resultado"><span class="currency">$</span>—</div>
+        <div class="kpi-meta" id="kpi-resultado-meta">Margen sobre ventas</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">vs Mes Anterior</div>
+        <div class="kpi-value" id="kpi-variacion">—</div>
+        <div class="kpi-meta" id="kpi-variacion-meta">Variación de resultado</div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="section">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Evolución mensual</div>
+            <div class="section-subtitle">Ingresos vs Egresos · ARS</div>
+          </div>
+        </div>
+        <div class="chart-container"><canvas id="chart-evolucion"></canvas></div>
+      </div>
+      <div class="section">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Composición</div>
+            <div class="section-subtitle">Categorías del período</div>
+          </div>
+        </div>
+        <div class="chart-container"><canvas id="chart-composicion"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Alertas y observaciones</div>
+          <div class="section-subtitle">Detección automática</div>
+        </div>
+      </div>
+      <div id="alerts-container"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Top y bottom proyectos</div>
+          <div class="section-subtitle">Margen del período</div>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <div>
+          <h4 style="font-size: 11px; text-transform: uppercase; color: var(--green); letter-spacing: 0.08em; margin-bottom: 12px; font-weight: 600;">Top 5 — Mejor margen</h4>
+          <div id="top-proyectos"></div>
+        </div>
+        <div>
+          <h4 style="font-size: 11px; text-transform: uppercase; color: var(--red); letter-spacing: 0.08em; margin-bottom: 12px; font-weight: 600;">Bottom 3 — Atención</h4>
+          <div id="bottom-proyectos"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: P&L -->
+  <div id="tab-pl" class="tab-content hidden">
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Estado de Resultados</div>
+          <div class="section-subtitle">Base caja · ARS · Click en filas para drill-down</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="table-pl">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="hint" style="margin-top: 16px;">Las filas con ▸ se pueden expandir para ver el detalle por subcategoría.</div>
+    </div>
+  </div>
+
+  <!-- TAB: PROYECTOS -->
+  <div id="tab-proyectos" class="tab-content hidden">
+    <div class="stat-strip" id="proyectos-stats">
+      <div class="stat-strip-item">
+        <div class="label">Proyectos Activos</div>
+        <div class="value" id="stat-proyectos-count">—</div>
+      </div>
+      <div class="stat-strip-item">
+        <div class="label">Facturación Total</div>
+        <div class="value" id="stat-fact-total">—</div>
+      </div>
+      <div class="stat-strip-item">
+        <div class="label">Costos Materiales</div>
+        <div class="value" id="stat-cost-total">—</div>
+      </div>
+      <div class="stat-strip-item">
+        <div class="label">Margen Promedio</div>
+        <div class="value" id="stat-margen-prom">—</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Análisis por Proyecto</div>
+          <div class="section-subtitle">Click en columnas para ordenar</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="table-proyectos">
+          <thead>
+            <tr>
+              <th class="sortable" data-sort="proyecto">Proyecto</th>
+              <th class="sortable" data-sort="tipo">Tipo</th>
+              <th class="sortable num" data-sort="ingresos">Ingresos</th>
+              <th class="sortable num" data-sort="costos">Costos</th>
+              <th class="sortable num" data-sort="margen">Margen $</th>
+              <th class="sortable num" data-sort="margen_pct">Margen %</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div>
+    <strong style="color: var(--ink);">Alternativo Agency · Financial</strong> &nbsp;·&nbsp;
+    Datos en tiempo real desde Google Sheets &nbsp;·&nbsp;
+    <span id="last-update">—</span>
+  </div>
+  <div class="muted">
+    Pipeline: n8n + Claude API · Clasificación contable automática
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// CONFIGURACIÓN
+// ============================================================
+const CONFIG = {
+  API_KEY: 'AIzaSyD4AdXjF377pFgmG0KN3g-vtYDK8gZ_Y4c',
+  CACHE_SHEET_ID: '1hQMpxoVvhbiZLIW-w-8g5cvLqu4gOaCCvgV52YJGqa4',
+  CASHFLOW_SHEET_ID: '11MXkLFF4rjXTraFncb2Hzw74D7qZnN9X8GiSecazUZM',
+  CACHE_RANGE: 'cache!A1:H2000',
+  CASHFLOW_RANGE: 'Info_Cashflow!A4:K2000',
+  TIPO_VENTA_RANGE: 'Info_Cashflow!L4:L2000', // si existiera Tipo_Venta column
+};
+
+const MESES_ORDEN = { 'Enero': 1, 'Febrero': 2, 'Marzo': 3, 'Abril': 4, 'Mayo': 5, 'Junio': 6, 'Julio': 7, 'Agosto': 8, 'Septiembre': 9, 'Octubre': 10, 'Noviembre': 11, 'Diciembre': 12 };
+const MESES_LIST = Object.keys(MESES_ORDEN);
+
+const PL_CATEGORIAS_ORDER = [
+  'INGRESO_VH', 'INGRESO_VNH',
+  'COSTO_PRODUCCION', 'COSTO_MATERIALES',
+  'GASTO_COMERCIAL', 'GASTO_ADMIN', 'GASTO_ESTRUCTURA', 'GASTO_FINANCIERO'
+];
+
+const PL_LABELS = {
+  'INGRESO_VH': 'Ingresos · Ventas Habituales',
+  'INGRESO_VNH': 'Ingresos · Ventas No Habituales',
+  'COSTO_PRODUCCION': 'Costos de Producción',
+  'COSTO_MATERIALES': 'Costos de Materiales',
+  'GASTO_COMERCIAL': 'Gastos Comerciales',
+  'GASTO_ADMIN': 'Gastos Administrativos',
+  'GASTO_ESTRUCTURA': 'Gastos de Estructura',
+  'GASTO_FINANCIERO': 'Gastos Financieros'
+};
+
+const PL_COLORS = {
+  'INGRESO_VH': '#16a34a',
+  'INGRESO_VNH': '#22c55e',
+  'COSTO_PRODUCCION': '#1e3a8a',
+  'COSTO_MATERIALES': '#3b82f6',
+  'GASTO_COMERCIAL': '#a855f7',
+  'GASTO_ADMIN': '#0891b2',
+  'GASTO_ESTRUCTURA': '#ca8a04',
+  'GASTO_FINANCIERO': '#dc2626'
+};
+
+// ============================================================
+// ESTADO GLOBAL
+// ============================================================
+let DATA = {
+  cashflow: [],
+  cache: [],
+  merged: [],
+};
+
+let CHARTS = {};
+let SORT_STATE = { col: 'margen', dir: 'desc' };
+
+// ============================================================
+// UTILS
+// ============================================================
+function fmtMoney(n, opts = {}) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  const abs = Math.abs(n);
+  let formatted;
+  if (opts.compact && abs >= 1_000_000) {
+    formatted = (n / 1_000_000).toFixed(1) + 'M';
+  } else if (opts.compact && abs >= 1000) {
+    formatted = (n / 1000).toFixed(0) + 'K';
+  } else {
+    formatted = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(n);
+  }
+  return formatted;
+}
+
+function fmtPct(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  return n.toFixed(1) + '%';
+}
+
+function parseNumber(v) {
+  if (v === null || v === undefined || v === '') return 0;
+  if (typeof v === 'number') return v;
+  // Limpiar: quitar $, espacios, separadores de miles, normalizar coma decimal
+  const s = String(v).replace(/[$\s]/g, '').replace(/\./g, '').replace(',', '.');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
+function showError(msg, detail) {
+  document.getElementById('loading').classList.add('hidden');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+  const box = document.getElementById('error-box');
+  box.classList.remove('hidden');
+  document.getElementById('error-message').textContent = msg;
+  document.getElementById('error-detail').textContent = detail || '';
+}
+
+function clearError() {
+  document.getElementById('error-box').classList.add('hidden');
+}
+
+// ============================================================
+// DATA FETCHING
+// ============================================================
+async function fetchSheet(sheetId, range) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${CONFIG.API_KEY}`;
+  const r = await fetch(url);
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(`Sheet ${sheetId.slice(0,8)}…: ${err.error?.message || r.statusText}`);
+  }
+  const data = await r.json();
+  return data.values || [];
+}
+
+async function loadAll() {
+  document.getElementById('loading').classList.remove('hidden');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+  clearError();
+
+  try {
+    const [cacheRows, cashflowRows] = await Promise.all([
+      fetchSheet(CONFIG.CACHE_SHEET_ID, CONFIG.CACHE_RANGE),
+      fetchSheet(CONFIG.CASHFLOW_SHEET_ID, CONFIG.CASHFLOW_RANGE),
+    ]);
+
+    // Procesar cache
+    const cacheHeader = cacheRows[0];
+    DATA.cache = cacheRows.slice(1)
+      .filter(r => r && r[0])
+      .map(r => {
+        const o = {};
+        cacheHeader.forEach((h, i) => o[h] = r[i] || '');
+        return o;
+      });
+
+    // Procesar cashflow
+    const cfHeader = cashflowRows[0];
+    DATA.cashflow = cashflowRows.slice(1)
+      .filter(r => r && r[0] && r[1] && r[1] !== 'Total')
+      .map(r => {
+        const o = {};
+        cfHeader.forEach((h, i) => {
+          const key = (h || '').trim();
+          o[key] = r[i] !== undefined ? r[i] : '';
+        });
+        return o;
+      });
+
+    // Merge por índice (cache y cashflow están alineados)
+    DATA.merged = DATA.cashflow.map((cf, i) => {
+      const cc = DATA.cache[i] || {};
+      return {
+        mes: cf['Mes'],
+        mes_orden: MESES_ORDEN[cf['Mes']] || 0,
+        fecha: cf['Fecha'],
+        rubro: cf['Rubro'],
+        concepto: cf['Concepto'],
+        subconcepto: cf['Subconcepto'],
+        descripcion: cf['Descripción'] || cf['Descripcion'] || '',
+        moneda: cf['Moneda'],
+        ingreso: parseNumber(cf['Ingreso']),
+        egreso: parseNumber(cf['Egreso']),
+        cuenta: cf['Cuenta'],
+        hash: cc.hash,
+        categoria_pl: cc.categoria_pl,
+        subcategoria: cc.subcategoria,
+        categoria_no_pl: cc.categoria_no_pl,
+        confianza: parseFloat(cc.confianza) || 0,
+      };
+    });
+
+    document.getElementById('loading').classList.add('hidden');
+    const now = new Date();
+    document.getElementById('last-update').textContent = 'Última actualización: ' + now.toLocaleString('es-AR');
+
+    render();
+  } catch (e) {
+    console.error(e);
+    showError('Error al cargar datos: ' + e.message, 'Verificá que la API key tenga permisos y que las sheets estén accesibles.');
+  }
+}
+
+// ============================================================
+// FILTRADO POR PERÍODO
+// ============================================================
+function getMesesPeriodo() {
+  const period = document.getElementById('period-selector').value;
+  const mesesDisponibles = [...new Set(DATA.merged.map(r => r.mes).filter(Boolean))]
+    .sort((a, b) => MESES_ORDEN[a] - MESES_ORDEN[b]);
+
+  if (mesesDisponibles.length === 0) return [];
+
+  if (period === 'current') return [mesesDisponibles[mesesDisponibles.length - 1]];
+  if (period === 'last') return mesesDisponibles.length >= 2 ? [mesesDisponibles[mesesDisponibles.length - 2]] : [mesesDisponibles[0]];
+  if (period === 'q1') return ['Enero', 'Febrero', 'Marzo'].filter(m => mesesDisponibles.includes(m));
+  if (period === 'ytd') return mesesDisponibles;
+  // Es un mes específico (capitalize first)
+  const cap = period.charAt(0).toUpperCase() + period.slice(1);
+  return mesesDisponibles.includes(cap) ? [cap] : [];
+}
+
+function filterByPeriodo(rows) {
+  const meses = getMesesPeriodo();
+  return rows.filter(r => meses.includes(r.mes));
+}
+
+function filterARS(rows) {
+  return rows.filter(r => r.moneda === 'ARS');
+}
+
+// ============================================================
+// CÁLCULOS
+// ============================================================
+function calcSaldoCaja() {
+  // Saldo = saldos iniciales + todos los ingresos - todos los egresos absolutos hasta el período
+  const meses = getMesesPeriodo();
+  if (meses.length === 0) return 0;
+
+  // Tomamos hasta el último mes del período
+  const lastMes = Math.max(...meses.map(m => MESES_ORDEN[m]));
+  const acum = DATA.merged
+    .filter(r => r.moneda === 'ARS' && r.mes_orden <= lastMes)
+    .reduce((s, r) => s + r.ingreso + r.egreso, 0); // egreso es negativo
+  return acum;
+}
+
+function calcKPIs() {
+  const periodoRows = filterARS(filterByPeriodo(DATA.merged));
+  const plRows = periodoRows.filter(r => r.categoria_pl);
+
+  const ingresos = plRows
+    .filter(r => r.categoria_pl.startsWith('INGRESO_'))
+    .reduce((s, r) => s + r.ingreso, 0);
+
+  const egresos = plRows
+    .filter(r => !r.categoria_pl.startsWith('INGRESO_'))
+    .reduce((s, r) => s + r.egreso, 0);
+
+  const resultado = ingresos + egresos;
+  const margen = ingresos > 0 ? (resultado / ingresos * 100) : 0;
+  const saldoCaja = calcSaldoCaja();
+
+  // Mes anterior comparable
+  const meses = getMesesPeriodo();
+  let varVsAnterior = null;
+  if (meses.length === 1) {
+    const idx = MESES_LIST.indexOf(meses[0]);
+    if (idx > 0) {
+      const mesPrev = MESES_LIST[idx - 1];
+      const prevRows = filterARS(DATA.merged.filter(r => r.mes === mesPrev && r.categoria_pl));
+      const prevIng = prevRows.filter(r => r.categoria_pl.startsWith('INGRESO_')).reduce((s,r) => s + r.ingreso, 0);
+      const prevEgr = prevRows.filter(r => !r.categoria_pl.startsWith('INGRESO_')).reduce((s,r) => s + r.egreso, 0);
+      const prevRes = prevIng + prevEgr;
+      varVsAnterior = resultado - prevRes;
+    }
+  }
+
+  return { ingresos, egresos, resultado, margen, saldoCaja, varVsAnterior, meses };
+}
+
+function calcPLMatrix() {
+  // Para tabla P&L: filas = categorías, columnas = meses
+  const meses = [...new Set(DATA.merged.map(r => r.mes).filter(Boolean))]
+    .sort((a, b) => MESES_ORDEN[a] - MESES_ORDEN[b]);
+
+  const arsRows = filterARS(DATA.merged);
+  const matrix = {};
+  PL_CATEGORIAS_ORDER.forEach(cat => {
+    matrix[cat] = { byMes: {}, total: 0, byBub: {} };
+    meses.forEach(m => matrix[cat].byMes[m] = 0);
+  });
+
+  arsRows.forEach(r => {
+    if (!r.categoria_pl) return;
+    if (!matrix[r.categoria_pl]) return;
+    const valor = r.categoria_pl.startsWith('INGRESO_') ? r.ingreso : r.egreso;
+    matrix[r.categoria_pl].byMes[r.mes] = (matrix[r.categoria_pl].byMes[r.mes] || 0) + valor;
+    matrix[r.categoria_pl].total += valor;
+
+    // Subcategoría drill-down
+    const sub = r.subcategoria || 'SIN_SUBCAT';
+    if (!matrix[r.categoria_pl].byBub[sub]) {
+      matrix[r.categoria_pl].byBub[sub] = { byMes: {}, total: 0 };
+      meses.forEach(m => matrix[r.categoria_pl].byBub[sub].byMes[m] = 0);
+    }
+    matrix[r.categoria_pl].byBub[sub].byMes[r.mes] = (matrix[r.categoria_pl].byBub[sub].byMes[r.mes] || 0) + valor;
+    matrix[r.categoria_pl].byBub[sub].total += valor;
+  });
+
+  return { matrix, meses };
+}
+
+function calcEvolucion() {
+  // Mensual: ingresos vs egresos absolutos
+  const meses = [...new Set(DATA.merged.map(r => r.mes).filter(Boolean))]
+    .sort((a, b) => MESES_ORDEN[a] - MESES_ORDEN[b]);
+
+  const arsRows = filterARS(DATA.merged).filter(r => r.categoria_pl);
+  return meses.map(mes => {
+    const filas = arsRows.filter(r => r.mes === mes);
+    const ing = filas.filter(r => r.categoria_pl.startsWith('INGRESO_')).reduce((s,r) => s + r.ingreso, 0);
+    const egr = Math.abs(filas.filter(r => !r.categoria_pl.startsWith('INGRESO_')).reduce((s,r) => s + r.egreso, 0));
+    return { mes, ingresos: ing, egresos: egr, resultado: ing - egr };
+  });
+}
+
+function calcComposicion() {
+  const periodoRows = filterARS(filterByPeriodo(DATA.merged))
+    .filter(r => r.categoria_pl && !r.categoria_pl.startsWith('INGRESO_'));
+
+  const byCat = {};
+  periodoRows.forEach(r => {
+    byCat[r.categoria_pl] = (byCat[r.categoria_pl] || 0) + Math.abs(r.egreso);
+  });
+
+  return Object.entries(byCat)
+    .map(([cat, val]) => ({ cat, val, label: PL_LABELS[cat] || cat, color: PL_COLORS[cat] || '#888' }))
+    .sort((a, b) => b.val - a.val);
+}
+
+function calcProyectos() {
+  // Proyecto = subcategoria de COSTO_MATERIALES + cliente de INGRESOS
+  // Cruzamos por nombre normalizado
+  const periodoRows = filterARS(filterByPeriodo(DATA.merged));
+
+  const byProy = {};
+  periodoRows.forEach(r => {
+    if (!r.categoria_pl) return;
+    let proy = null, tipo = null;
+
+    if (r.categoria_pl.startsWith('INGRESO_')) {
+      proy = (r.subcategoria || '').replace(/_/g, ' ').toUpperCase();
+      tipo = r.categoria_pl === 'INGRESO_VH' ? 'VH' : 'VNH';
+    } else if (r.categoria_pl === 'COSTO_MATERIALES') {
+      proy = (r.subcategoria || '').replace(/_/g, ' ').toUpperCase();
+      tipo = 'COSTO';
+    } else {
+      return;
+    }
+
+    if (!proy) return;
+
+    if (!byProy[proy]) byProy[proy] = { proyecto: proy, tipo: '—', ingresos: 0, costos: 0 };
+    if (r.categoria_pl.startsWith('INGRESO_')) {
+      byProy[proy].ingresos += r.ingreso;
+      byProy[proy].tipo = tipo;
+    } else {
+      byProy[proy].costos += Math.abs(r.egreso);
+    }
+  });
+
+  return Object.values(byProy)
+    .map(p => ({
+      ...p,
+      margen: p.ingresos - p.costos,
+      margen_pct: p.ingresos > 0 ? ((p.ingresos - p.costos) / p.ingresos * 100) : (p.costos > 0 ? -100 : 0)
+    }))
+    .filter(p => p.ingresos > 0 || p.costos > 0);
+}
+
+function calcAlertas() {
+  const alertas = [];
+  const periodoRows = filterARS(filterByPeriodo(DATA.merged));
+
+  // 1. Gastos personales detectados
+  const personales = periodoRows.filter(r => r.categoria_no_pl === 'GASTO_PERSONAL');
+  const totalPersonal = personales.reduce((s, r) => s + Math.abs(r.egreso), 0);
+  if (totalPersonal > 0) {
+    alertas.push({
+      tipo: 'info',
+      icon: '◆',
+      titulo: 'Gastos personales detectados (excluidos del P&L)',
+      texto: `${personales.length} movimientos por total de $${fmtMoney(totalPersonal)} ARS — categorizados separadamente, no impactan el resultado operativo.`
+    });
+  }
+
+  // 2. Proyectos con margen negativo
+  const proyectos = calcProyectos();
+  const negativos = proyectos.filter(p => p.ingresos > 0 && p.margen < 0);
+  if (negativos.length > 0) {
+    alertas.push({
+      tipo: 'danger',
+      icon: '!',
+      titulo: `${negativos.length} proyecto${negativos.length > 1 ? 's' : ''} con margen negativo`,
+      texto: negativos.slice(0, 3).map(p => `${p.proyecto}: ${fmtPct(p.margen_pct)}`).join(' · ') + (negativos.length > 3 ? ` y ${negativos.length - 3} más` : '')
+    });
+  }
+
+  // 3. Proyectos con costos pero sin ingresos (work-in-progress)
+  const enProceso = proyectos.filter(p => p.ingresos === 0 && p.costos > 0);
+  if (enProceso.length > 0) {
+    const totalEnProceso = enProceso.reduce((s, p) => s + p.costos, 0);
+    alertas.push({
+      tipo: 'warn',
+      icon: '⌛',
+      titulo: `${enProceso.length} proyecto${enProceso.length > 1 ? 's' : ''} con costos sin cobranza aún`,
+      texto: `Total invertido: $${fmtMoney(totalEnProceso)} ARS — cobranzas pendientes o proyectos en ejecución.`
+    });
+  }
+
+  // 4. Saldo de caja
+  const saldo = calcSaldoCaja();
+  if (saldo > 0) {
+    alertas.push({
+      tipo: 'success',
+      icon: '✓',
+      titulo: `Posición de caja saludable`,
+      texto: `Saldo acumulado: $${fmtMoney(saldo)} ARS al cierre del período seleccionado.`
+    });
+  } else if (saldo < 0) {
+    alertas.push({
+      tipo: 'danger',
+      icon: '!',
+      titulo: `Saldo de caja negativo`,
+      texto: `Acumulado: $${fmtMoney(saldo)} ARS — revisar urgente.`
+    });
+  }
+
+  return alertas;
+}
+
+// ============================================================
+// RENDER: KPIs
+// ============================================================
+function renderKPIs() {
+  const k = calcKPIs();
+
+  document.getElementById('kpi-saldo').innerHTML = '<span class="currency">$</span>' + fmtMoney(k.saldoCaja, { compact: true });
+  document.getElementById('kpi-saldo-meta').textContent = `Acumulado al cierre del período`;
+
+  document.getElementById('kpi-ingresos').innerHTML = '<span class="currency">$</span>' + fmtMoney(k.ingresos, { compact: true });
+  document.getElementById('kpi-ingresos-meta').textContent = k.meses.join(' · ') || '—';
+
+  const resultadoEl = document.getElementById('kpi-resultado');
+  resultadoEl.className = 'kpi-value ' + (k.resultado >= 0 ? 'positive' : 'negative');
+  resultadoEl.innerHTML = '<span class="currency">$</span>' + fmtMoney(k.resultado, { compact: true });
+  document.getElementById('kpi-resultado-meta').innerHTML = `Margen: <strong>${fmtPct(k.margen)}</strong> sobre ventas`;
+
+  const varEl = document.getElementById('kpi-variacion');
+  if (k.varVsAnterior !== null) {
+    const positive = k.varVsAnterior >= 0;
+    varEl.className = 'kpi-value ' + (positive ? 'positive' : 'negative');
+    varEl.innerHTML = (positive ? '+' : '−') + '<span class="currency">$</span>' + fmtMoney(Math.abs(k.varVsAnterior), { compact: true });
+    document.getElementById('kpi-variacion-meta').textContent = 'Variación de resultado vs mes anterior';
+  } else {
+    varEl.textContent = '—';
+    document.getElementById('kpi-variacion-meta').textContent = 'Selecciona un mes para comparar';
+  }
+}
+
+// ============================================================
+// RENDER: CHARTS
+// ============================================================
+function renderEvolucion() {
+  const data = calcEvolucion();
+  const ctx = document.getElementById('chart-evolucion').getContext('2d');
+  if (CHARTS.evolucion) CHARTS.evolucion.destroy();
+
+  CHARTS.evolucion = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.map(d => d.mes),
+      datasets: [
+        {
+          label: 'Ingresos',
+          data: data.map(d => d.ingresos),
+          backgroundColor: '#22c55e',
+          borderRadius: 4,
+          barPercentage: 0.7,
+        },
+        {
+          label: 'Egresos',
+          data: data.map(d => d.egresos),
+          backgroundColor: '#dc2626',
+          borderRadius: 4,
+          barPercentage: 0.7,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', align: 'end', labels: { usePointStyle: true, font: { family: 'Inter', size: 12 } } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: $${fmtMoney(ctx.parsed.y)}`
+          }
+        }
+      },
+      scales: {
+        y: {
+          ticks: {
+            callback: v => '$' + fmtMoney(v, { compact: true }),
+            font: { family: 'JetBrains Mono', size: 11 }
+          },
+          grid: { color: '#e8e2d3' }
+        },
+        x: {
+          ticks: { font: { family: 'Inter', size: 12 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+function renderComposicion() {
+  const data = calcComposicion();
+  const ctx = document.getElementById('chart-composicion').getContext('2d');
+  if (CHARTS.composicion) CHARTS.composicion.destroy();
+
+  if (data.length === 0) {
+    ctx.font = '14px Inter';
+    ctx.fillStyle = '#8a847a';
+    ctx.textAlign = 'center';
+    ctx.fillText('Sin datos en el período', ctx.canvas.width / 2, ctx.canvas.height / 2);
+    return;
+  }
+
+  CHARTS.composicion = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: data.map(d => d.label),
+      datasets: [{
+        data: data.map(d => d.val),
+        backgroundColor: data.map(d => d.color),
+        borderWidth: 2,
+        borderColor: '#ffffff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '60%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            font: { family: 'Inter', size: 11 },
+            usePointStyle: true,
+            boxWidth: 8,
+            padding: 12
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.label}: $${fmtMoney(ctx.parsed)}`
+          }
+        }
+      }
+    }
+  });
+}
+
+// ============================================================
+// RENDER: ALERTAS
+// ============================================================
+function renderAlertas() {
+  const alertas = calcAlertas();
+  const cont = document.getElementById('alerts-container');
+  if (alertas.length === 0) {
+    cont.innerHTML = '<div class="muted" style="font-size: 13px;">No hay alertas en el período seleccionado.</div>';
+    return;
+  }
+  cont.innerHTML = alertas.map(a => `
+    <div class="alert ${a.tipo}">
+      <div class="alert-icon">${a.icon}</div>
+      <div>
+        <div class="alert-title">${a.titulo}</div>
+        <div class="alert-text">${a.texto}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// RENDER: TOP/BOTTOM PROYECTOS
+// ============================================================
+function renderTopBottom() {
+  const proyectos = calcProyectos().filter(p => p.ingresos > 0);
+  const top = [...proyectos].sort((a, b) => b.margen_pct - a.margen_pct).slice(0, 5);
+  const bottom = [...proyectos].sort((a, b) => a.margen_pct - b.margen_pct).slice(0, 3);
+
+  function renderList(arr, container) {
+    if (arr.length === 0) {
+      document.getElementById(container).innerHTML = '<div class="muted" style="font-size: 12px;">Sin datos</div>';
+      return;
+    }
+    document.getElementById(container).innerHTML = `
+      <div style="font-size: 12px;">
+        ${arr.map(p => `
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line);">
+            <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%;" title="${p.proyecto}">${p.proyecto}</div>
+            <div class="num ${p.margen_pct >= 0 ? 'pos' : 'neg'}">${fmtPct(p.margen_pct)}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+  renderList(top, 'top-proyectos');
+  renderList(bottom, 'bottom-proyectos');
+}
+
+// ============================================================
+// RENDER: P&L TABLE
+// ============================================================
+function renderPL() {
+  const { matrix, meses } = calcPLMatrix();
+
+  // Header
+  const thead = document.querySelector('#table-pl thead');
+  thead.innerHTML = `
+    <tr>
+      <th>Categoría</th>
+      ${meses.map(m => `<th class="num">${m}</th>`).join('')}
+      <th class="num">Total</th>
+    </tr>
+  `;
+
+  // Body
+  const tbody = document.querySelector('#table-pl tbody');
+  let html = '';
+
+  // Ingresos
+  html += `<tr class="subheader"><td colspan="${meses.length + 2}">Ingresos</td></tr>`;
+  let totalIngresosPorMes = {};
+  meses.forEach(m => totalIngresosPorMes[m] = 0);
+  let totalIngresos = 0;
+
+  ['INGRESO_VH', 'INGRESO_VNH'].forEach(cat => {
+    const m = matrix[cat];
+    if (m.total === 0) return;
+    const subcatsArr = Object.entries(m.byBub).filter(([_, v]) => v.total !== 0);
+    const hasSubs = subcatsArr.length > 0;
+    html += `<tr class="${hasSubs ? 'clickable' : ''}" data-cat="${cat}">
+      <td class="strong">${PL_LABELS[cat]}</td>
+      ${meses.map(mes => `<td class="num">${m.byMes[mes] ? '$' + fmtMoney(m.byMes[mes]) : '—'}</td>`).join('')}
+      <td class="num strong">$${fmtMoney(m.total)}</td>
+    </tr>`;
+    if (hasSubs) {
+      subcatsArr.sort(([_,a], [__,b]) => b.total - a.total).forEach(([sub, sv]) => {
+        html += `<tr class="drilldown-row" data-parent="${cat}" style="display: none;">
+          <td>${sub}</td>
+          ${meses.map(mes => `<td class="num">${sv.byMes[mes] ? '$' + fmtMoney(sv.byMes[mes]) : '—'}</td>`).join('')}
+          <td class="num">$${fmtMoney(sv.total)}</td>
+        </tr>`;
+      });
+    }
+    meses.forEach(mes => totalIngresosPorMes[mes] += m.byMes[mes] || 0);
+    totalIngresos += m.total;
+  });
+
+  html += `<tr class="total-row">
+    <td>Total Ingresos</td>
+    ${meses.map(m => `<td class="num">$${fmtMoney(totalIngresosPorMes[m])}</td>`).join('')}
+    <td class="num">$${fmtMoney(totalIngresos)}</td>
+  </tr>`;
+
+  // Egresos
+  html += `<tr class="subheader"><td colspan="${meses.length + 2}">Egresos</td></tr>`;
+  let totalEgresosPorMes = {};
+  meses.forEach(m => totalEgresosPorMes[m] = 0);
+  let totalEgresos = 0;
+
+  ['COSTO_PRODUCCION', 'COSTO_MATERIALES', 'GASTO_COMERCIAL', 'GASTO_ADMIN', 'GASTO_ESTRUCTURA', 'GASTO_FINANCIERO'].forEach(cat => {
+    const m = matrix[cat];
+    if (m.total === 0) return;
+    const subcatsArr = Object.entries(m.byBub).filter(([_, v]) => v.total !== 0);
+    const hasSubs = subcatsArr.length > 0;
+    html += `<tr class="${hasSubs ? 'clickable' : ''}" data-cat="${cat}">
+      <td class="strong">${PL_LABELS[cat]}</td>
+      ${meses.map(mes => `<td class="num neg">${m.byMes[mes] ? '$' + fmtMoney(m.byMes[mes]) : '—'}</td>`).join('')}
+      <td class="num strong neg">$${fmtMoney(m.total)}</td>
+    </tr>`;
+    if (hasSubs) {
+      subcatsArr.sort(([_,a], [__,b]) => a.total - b.total).forEach(([sub, sv]) => {
+        html += `<tr class="drilldown-row" data-parent="${cat}" style="display: none;">
+          <td>${sub.replace(/_/g, ' ')}</td>
+          ${meses.map(mes => `<td class="num">${sv.byMes[mes] ? '$' + fmtMoney(sv.byMes[mes]) : '—'}</td>`).join('')}
+          <td class="num">$${fmtMoney(sv.total)}</td>
+        </tr>`;
+      });
+    }
+    meses.forEach(mes => totalEgresosPorMes[mes] += m.byMes[mes] || 0);
+    totalEgresos += m.total;
+  });
+
+  html += `<tr class="total-row">
+    <td>Total Egresos</td>
+    ${meses.map(m => `<td class="num neg">$${fmtMoney(totalEgresosPorMes[m])}</td>`).join('')}
+    <td class="num neg">$${fmtMoney(totalEgresos)}</td>
+  </tr>`;
+
+  // Resultado
+  html += `<tr class="subheader"><td colspan="${meses.length + 2}">Resultado</td></tr>`;
+  html += `<tr class="total-row">
+    <td>RESULTADO DEL PERÍODO</td>
+    ${meses.map(m => {
+      const r = totalIngresosPorMes[m] + totalEgresosPorMes[m];
+      return `<td class="num ${r >= 0 ? 'pos' : 'neg'}">$${fmtMoney(r)}</td>`;
+    }).join('')}
+    <td class="num ${(totalIngresos + totalEgresos) >= 0 ? 'pos' : 'neg'}">$${fmtMoney(totalIngresos + totalEgresos)}</td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+
+  // Click handlers para drill-down
+  tbody.querySelectorAll('tr.clickable').forEach(tr => {
+    tr.addEventListener('click', () => {
+      const cat = tr.dataset.cat;
+      const expanded = tr.classList.toggle('expanded');
+      tbody.querySelectorAll(`tr.drilldown-row[data-parent="${cat}"]`).forEach(d => {
+        d.style.display = expanded ? '' : 'none';
+      });
+    });
+  });
+}
+
+// ============================================================
+// RENDER: PROYECTOS TABLE
+// ============================================================
+function renderProyectos() {
+  const proyectos = calcProyectos();
+
+  // Stats
+  const conIng = proyectos.filter(p => p.ingresos > 0);
+  document.getElementById('stat-proyectos-count').textContent = proyectos.length;
+  document.getElementById('stat-fact-total').textContent = '$' + fmtMoney(conIng.reduce((s,p) => s + p.ingresos, 0), { compact: true });
+  document.getElementById('stat-cost-total').textContent = '$' + fmtMoney(proyectos.reduce((s,p) => s + p.costos, 0), { compact: true });
+  const margenes = conIng.map(p => p.margen_pct);
+  const margenProm = margenes.length > 0 ? margenes.reduce((s,m) => s+m, 0) / margenes.length : 0;
+  document.getElementById('stat-margen-prom').textContent = fmtPct(margenProm);
+
+  // Sort
+  const sortFns = {
+    proyecto: (a, b) => a.proyecto.localeCompare(b.proyecto),
+    tipo: (a, b) => (a.tipo || '').localeCompare(b.tipo || ''),
+    ingresos: (a, b) => a.ingresos - b.ingresos,
+    costos: (a, b) => a.costos - b.costos,
+    margen: (a, b) => a.margen - b.margen,
+    margen_pct: (a, b) => a.margen_pct - b.margen_pct,
+  };
+
+  let sorted = [...proyectos].sort(sortFns[SORT_STATE.col] || sortFns.margen);
+  if (SORT_STATE.dir === 'desc') sorted.reverse();
+
+  const tbody = document.querySelector('#table-proyectos tbody');
+  if (sorted.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="muted" style="padding: 32px; text-align: center;">Sin proyectos en el período</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = sorted.map(p => {
+    let estadoBadge;
+    if (p.ingresos === 0) {
+      estadoBadge = '<span class="badge gray">En proceso</span>';
+    } else if (p.margen_pct < 0) {
+      estadoBadge = '<span class="badge red">Pérdida</span>';
+    } else if (p.margen_pct < 20) {
+      estadoBadge = '<span class="badge yellow">Margen bajo</span>';
+    } else if (p.margen_pct >= 50) {
+      estadoBadge = '<span class="badge green">Excelente</span>';
+    } else {
+      estadoBadge = '<span class="badge green">OK</span>';
+    }
+
+    const tipoBadge = p.tipo === 'VH' ? '<span class="badge green">VH</span>' :
+                      p.tipo === 'VNH' ? '<span class="badge gray">VNH</span>' :
+                      '<span class="badge gray">—</span>';
+
+    return `<tr>
+      <td class="strong">${p.proyecto}</td>
+      <td>${tipoBadge}</td>
+      <td class="num">${p.ingresos > 0 ? '$' + fmtMoney(p.ingresos) : '—'}</td>
+      <td class="num">${p.costos > 0 ? '$' + fmtMoney(p.costos) : '—'}</td>
+      <td class="num ${p.margen >= 0 ? 'pos' : 'neg'}">${p.ingresos > 0 ? '$' + fmtMoney(p.margen) : '—'}</td>
+      <td class="num ${p.margen_pct >= 0 ? 'pos' : 'neg'}">${p.ingresos > 0 ? fmtPct(p.margen_pct) : '—'}</td>
+      <td>${estadoBadge}</td>
+    </tr>`;
+  }).join('');
+
+  // Sort handlers
+  document.querySelectorAll('#table-proyectos th.sortable').forEach(th => {
+    th.onclick = () => {
+      const col = th.dataset.sort;
+      if (SORT_STATE.col === col) {
+        SORT_STATE.dir = SORT_STATE.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        SORT_STATE.col = col;
+        SORT_STATE.dir = ['ingresos','costos','margen','margen_pct'].includes(col) ? 'desc' : 'asc';
+      }
+      renderProyectos();
+    };
+  });
+}
+
+// ============================================================
+// RENDER: MAIN
+// ============================================================
+function render() {
+  renderKPIs();
+  renderEvolucion();
+  renderComposicion();
+  renderAlertas();
+  renderTopBottom();
+  renderPL();
+  renderProyectos();
+
+  // Mostrar tab actual
+  const activeTab = document.querySelector('.tab.active').dataset.tab;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+  document.getElementById('tab-' + activeTab).classList.remove('hidden');
+}
+
+// ============================================================
+// EVENTOS
+// ============================================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+    document.getElementById('tab-' + tab.dataset.tab).classList.remove('hidden');
+  });
+});
+
+document.getElementById('refresh-btn').addEventListener('click', loadAll);
+document.getElementById('period-selector').addEventListener('change', render);
+
+// Inicio: setear default a último mes disponible (que será "current" en el selector)
+loadAll();
+</script>
+
+</body>
+</html>
